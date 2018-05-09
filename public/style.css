@@ -1,0 +1,51 @@
+/* | + ~((\☼.☼/))~ + | */
+
+body {
+  font-family: AmericanTypewriter-Bold, sans-serif;
+  margin: 0 auto;
+
+}
+
+.container {
+  width: 60%;
+  background-color: #6FB3FF;
+  padding: 40px;
+
+}
+
+.mrShineHeader {
+  color: #ffffff;
+  font-weight: 600;
+
+}
+
+#borderBox {
+  font-family: AmericanTypewriter-Bold;
+  background-color: #ffffff;
+  box-shadow: 3px 4px 4px 0 rgba(0,0,0,0.50);
+  font-size: 36px;
+  color: #F6A623;
+  letter-spacing: 2.99px;
+  margin: 60px;
+
+}
+
+.switch label, h3 {
+  display: inline-block;
+
+}  
+
+.switch label input[type="checkbox"]:checked + .lever {
+  background-color: #000000;
+
+}
+
+.switch label input[type=checkbox]:checked+.lever {
+    background-color: #6fb4ff;
+
+}
+
+label input {
+  display: inline-block;
+
+}

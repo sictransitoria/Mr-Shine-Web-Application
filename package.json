@@ -1,0 +1,23 @@
+{
+  "name": "MrShineWebApplication",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^2.0.1",
+    "body-parser": "^1.18.2",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "materialize-css": "^0.100.2",
+    "pg": "^7.4.3",
+    "sequelize": "^4.37.7",
+    "twilio": "^3.16.0"
+  }
+}
