@@ -1,3 +1,5 @@
 // | + ~((\☼.☼/))~ + |
 
-$('#input_starttime').pickatime({});
+  $(document).ready(function(){
+    $('.timepicker').timepicker();
+  });

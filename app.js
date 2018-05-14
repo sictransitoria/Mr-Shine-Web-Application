@@ -39,8 +39,6 @@ const User = sequelize.define('user',{
 
 sequelize.sync();
 
-// _ - _ - _ - _ - _ - //
-
 // Twilio Credentials
 const accountSid = 'AC590f4900fcb04a7423584d08fbacc531';
 const authToken = 'b03821fd6c6e71a9ef362e3fda3da746';
