@@ -76,10 +76,41 @@ h3 {
   font-size: 70px;
   margin-left: 20px;
 
+}
+
+.picker__date-display {
+  background-color: #6FB3FF;
+
+}
+
+.picker__close, .picker__today, .picker__clear {
+  color: #6FB3FF;
+  
+}
+
+#center-btn {
+  font-family: AmericanTypewriter;
+  float: right;
+  margin: 15px;
+
+}
+
+.btn, .btn-large {
+    text-decoration: none;
+    color: #fff;
+    background-color: #6FB3FF; 
+
+}
+
+#center-btn a:hover {
+  background-color: #66a3ff;
+
   }
 
 }
 
+
+/* Mobile Device Displays */
 @media only screen and (max-width: 500px) {
 
 body {
@@ -154,7 +185,6 @@ h3 {
   font-size: 70px;
   margin-left: 20px;
 
-  }
+  }  
 
-}    
-
+}

@@ -23,6 +23,23 @@
 
 		<img src="../images/sun.png" width=300px height=300px title="sun_log" alt="Friendly Sun">
 
+		 <div id="center-btn">
+
+		 <!-- Modal Trigger -->
+  					<a class="waves-effect waves-light btn modal-trigger" href="#modal1">What is Mr Shine?</a>
+
+  		<!-- Modal Structure -->
+  			<div id="modal1" class="modal">
+    			<div class="modal-content">
+      				<h4>What is Mr. Shine?</h4>
+      					<p>Mr. Shine is a web-application that sends you time-stamped motivational text messages to your mobile device.</p>
+    			</div>
+  				<div class="modal-footer">
+      				<a href="#!" class="modal-close waves-effect waves-green btn-flat">Got it.</a>
+    			</div>
+    		</div>
+    	</div>
+
 		<h1 class="mrShineHeader">Mr. Shine</h1>
 
 		 <!-- Morning Switch -->
@@ -30,8 +47,8 @@
 			  <div class="switch">
 			  	 <h3>Morning</h3>
 			    <label>
-			      <input type="checkbox" name="timepicker" class="timepicker">
-			      <span class="lever"></span>
+			     	<input type="checkbox" name="timepicker" class="timepicker-morning">
+			     	<span class="lever"></span>
 			    </label>
 			  </div>
 		 </div>
@@ -41,7 +58,7 @@
 		  <div class="switch">
 		  	<h3>Afternoon</h3>
 		    <label>
-		      <input type="checkbox" name="timepicker" class="timepicker">
+		      <input type="checkbox" name="timepicker" class="timepicker-afternoon">
 		      <span class="lever"></span>
 		    </label>
 		  </div>
@@ -52,7 +69,7 @@
 		  <div class="switch">
 		  	<h3>Evening</h3>
 		    <label>
-		      <input type="checkbox">
+		      <input type="checkbox" name="timepicker" class="timepicker-evening">
 		      <span class="lever"></span>
 		    </label>
 		  </div>
@@ -63,7 +80,7 @@
 		  <div class="switch">
 		  	<h3>Late Night</h3>
 		    <label>
-		      <input type="checkbox">
+		      <input type="checkbox" name="timepicker" class="timepicker-late-night">
 		      <span class="lever"></span>
 		    </label>
 		  </div>

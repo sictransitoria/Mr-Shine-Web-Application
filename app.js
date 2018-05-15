@@ -4,9 +4,12 @@ const express = require('express');
 const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const {Client} = require('pg');
-const app = express();
 const bcrypt = require('bcrypt');
 const Sequelize = require('sequelize');
+const passport = require('passport');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.json())
@@ -55,7 +58,7 @@ client.messages
   .then(message => console.log(message.sid));
 
 
-// Loud and Clear on Port 8080
- app.listen(8080, () => {
-    console.log('Server Started on Port: 8080');
+// Loud and Clear on Port 3000
+app.listen(PORT, () => {
+	console.log('...Server Started on Port 8080...')
 });
