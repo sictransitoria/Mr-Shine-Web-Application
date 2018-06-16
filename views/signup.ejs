@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="Mr. Shine Web Application" content="by Michael J Oria"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+  <!-- <link rel="icon" href="favicon.ico" type="image/x-icon" /> -->
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <link rel="stylesheet" type="text/css" href="./style.css">
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <script src="script.js" type="text/javascript"></script>
+  <title>Register Page</title>
+</head>
+<body>
+
+  <!-- | + ~((\☼.☼/))~ + | -->
+
+  <div class="container">
+      <h1 id="header-register">Ready to be Enlightened?</h1>
+      <form method="POST" action="/signup">
+      <div class="form-group">
+          <label for="lastname">Username:  </label>
+          <input type="text" class="form-control" name="username" placeholder="Enter a User Name.">
+      </div>
+      <div class="form-group">
+          <label for="lastname">Password:  </label>
+          <input type="password" class="form-control" name="password" placeholder="Enter a Password.">
+      </div>
+      <div class="form-group">
+          <label for="cell">Cell Phone:  </label>
+          <input type="text" class="form-control" name="cell" placeholder="Enter Your Cell #">
+      </div>
+      <div class="form-group">
+          <label for="email">Email:  </label>
+          <input type="text" class="form-control" name="email" placeholder="Enter Your Email.">
+      </div>
+
+      <button id="button" class="waves-effect waves-light btn-large">Submit</button>
+    </form>
+  </div>
+</body>
+</html>

@@ -13,7 +13,6 @@ $(document).ready(function(){
   })
 });
 
-
 // Afternoon TimePicker
 $(document).ready(function(){
     $('.timepicker-afternoon').pickatime({
@@ -47,6 +46,9 @@ $(document).ready(function(){
   })
 });
 
+// Modal Script
  $(document).ready(function(){
     $('.modal').modal();
   });
+
+// SMS Messages
