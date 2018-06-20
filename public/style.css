@@ -120,13 +120,6 @@ h3 {
   
 }
 
-#center-btn {
-  font-family: AmericanTypewriter;
-  float: right;
-  margin: 15px;
-
-}
-
 .btn, .btn-large {
     text-decoration: none;
     color: #fff;
@@ -134,12 +127,29 @@ h3 {
 
 }
 
-#center-btn a:hover {
-  background-color: #66a3ff;
+#center-btn {
+  font-family: AmericanTypewriter;
+  float: right;
+  margin: 15px;
 
 }
 
+#center-btn a, h5 {
+  display: inline;
 
+}
+
+#center-btn h5 {
+  margin: 50px;
+
+}
+  
+
+
+#center-btn a:hover {
+  background-color: #66a3ff;
+
+  }
 
 }
 

@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const {Client} = require('pg');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-cronJob = require('cron').CronJob;
+const notifications = require('./notifications.js')
 
 // Sequelize Variables
 const Sequelize = require('sequelize');
@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static('public'));
 
 
-// Create a Database named 'mrshine' to store users
+// CREATE DATABASE
 const Op = Sequelize.Op
 const sequelize = new Sequelize('mrshine', 'postgres', 'Runner4life!', {
 	host: 'localhost',
@@ -40,23 +40,19 @@ const sequelize = new Sequelize('mrshine', 'postgres', 'Runner4life!', {
 	}
 });
 
-// Create a table named 'shinenotes'
-const Note = sequelize.define('note', {
-	notification:  Sequelize.STRING
-
-});
-
-// Create a table named 'User' to store login information.
-const User = sequelize.define('users',{
+// CREATE TABLE
+const User = sequelize.define('users', {
 	username: Sequelize.STRING,
 	password: Sequelize.STRING,
 	phonenumber: Sequelize.STRING,
 	email: Sequelize.STRING
+
 });
 
 const sessionStore = new SequelizeStore({
     db: sequelize
-  });
+
+});
 
 sequelize.sync();
 sessionStore.sync();
@@ -85,7 +81,7 @@ passport.serializeUser(function(user, done) {
 passport.use('local-signup', new LocalStrategy({
     usernameField: 'username',
     passwordField: 'password',
-    cellField: 'cell',
+    phonenumberField: 'cell',
     emailField: 'email',
     passReqToCallback: true
 }, processSignupCallback));
@@ -175,9 +171,10 @@ passport.deserializeUser(function(id, cb) {
   });
 }); 
 
-// * Routes *
+// * ROUTES *
 
-// GET Routes	 
+// GET Routes
+
 // GET '/'
 app.get('/', (req, res) => {
 	return res.render('welcome');
@@ -209,13 +206,14 @@ app.get('/logout', (req, res) => {
 });
 
 // POST Routes
+
 // POST Sign-Up
 app.post('/signup', function(req,res, next){
 	passport.authenticate('local-signup', function(err, user){
 		if (err) {
 			return next(err);
 		} else {
-			return res.redirect('/login')
+			return res.redirect('/')
 		}
 	})(req, res, next);
 });
@@ -223,7 +221,6 @@ app.post('/signup', function(req,res, next){
 // POST Login
 app.post('/login', function(req,res,next){
 		passport.authenticate('local-login', function(err, user){
-			console.log(req.user + "has logged in.")
 			if (err || user == false) {
 				return res.render('login', {message: "Incorrect Username/Password"})
 			} else {
@@ -236,22 +233,24 @@ app.post('/login', function(req,res,next){
 });
 
 // **** Twilio Credentials ****
-const accountSid = 'AC590f4900fcb04a7423584d08fbacc531';
-const authToken = 'b03821fd6c6e71a9ef362e3fda3da746';
-
-// Require the Twilio Module and Create a REST Client
+const accountSid = "AC590f4900fcb04a7423584d08fbacc531";
+const authToken = "b03821fd6c6e71a9ef362e3fda3da746";
 const client = require('twilio')(accountSid, authToken);
+const cron = require('cron-scheduler')
+cronJob = require('cron').CronJob;
 
-client.messages
-  .create({
-    to: '+19142825402', // Receiving Phone Number
-    from: '+18452633657', // Sending a Message from Twilio Phone #
-    body: '"Find a beautiful piece of art...fall in love...admire it...and realize that that was created by human beings just like you, no more human, no less."',
-  }) 
-  .then(message => console.log(message.sid)); // To confirm a text message has been successfully inititated.
+var sendSMS = notifications.notifications[i];
+var numbers = [];
 
+for ( var i = 0; i < numbers.length; i++ ) {
+  client.messages.create( { to: numbers, from:'+18452633657', body: sendSMS}, function( err, data ) {
+  	console.log(sendSMS);
+  });
+}
 
-// Loud and Clear on Port 3000
-app.listen(PORT, () => {
-	console.log('...Server Started on Port 8080...')
+// Loud and Clear
+app.listen(PORT, ()=>{
+	console.log('Listening on port:', PORT)
 });
+
+

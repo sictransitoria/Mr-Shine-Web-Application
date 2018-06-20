@@ -3,12 +3,12 @@
 // Morning TimePicker
 $(document).ready(function(){
     $('.timepicker-morning').pickatime({
-    min: [5,30],
-  	max: [12,0],
-    default: null,
+    minTime: '11:45am', // 11:45:00 AM
+    maxTime: '6:00pm', // 6:00:00 PM
     twelvehour: true, // Change to 12 hour AM/PM clock from 24 hour.
     donetext: 'OK',
     autoclose: false,
+    ampmclickable: true,
     vibrate: true, // Vibrate the device when dragging clock hand.
   })
 });
@@ -50,5 +50,3 @@ $(document).ready(function(){
  $(document).ready(function(){
     $('.modal').modal();
   });
-
-// SMS Messages
