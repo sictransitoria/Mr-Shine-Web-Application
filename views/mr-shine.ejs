@@ -24,8 +24,8 @@
 		<!-- Vector Sun -->
 				<img src="../images/sun.png" width=300px height=300px title="sun_log" alt="Friendly Sun">
 
-		<div id="center-btn">
-				<a href="/logout"><button id="button" class="btn btn-submit">LOG OUT</button></a>
+		<div class="center-btn">
+				<a class="waves-effect waves-light btn-large" href="/logout">Log Out</a>
     	</div>
 
     	<!-- Headline Text -->
@@ -75,12 +75,24 @@
 		  </div>
 		 </div>
 
+		 <!-- On Demand Switch -->
+		 <div id="borderBox">
+		  	<h3 style="font-size: 56px; margin-left: 18px">Get a Text Now!</h3>
+		    <label>
+		    <div class="btn-align-align">
+				<form method="POST" action="/on-demand"><button id="button" class="waves-effect waves-light btn-large">+=</button></form>
+			</div>
+		    </label>
+		 </div>
+
+	<hr width="10%">
+
 		<footer>
 				<% include ./partials/footer %>
 		</footer>
 	</div>
 
 	<!-- TAK -->
-	<script src="//cdnjs.cloudflare.com/ajax/libs/timepicker/1.3.5/jquery.timepicker.min.js"></script>
+
 	</body>
 </html>

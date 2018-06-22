@@ -18,27 +18,40 @@
   <!-- | + ~((\☼.☼/))~ + | -->
 
   <div class="container">
-      <h1 id="header-register">Ready to be Enlightened?</h1>
+   
+    <!-- Vector Sun -->
+        <img src="../images/sun.png" width=300px height=300px title="sun_log" alt="Friendly Sun">
+
+      <h1 id="header-reg">Ready to be Enlightened?</h1>
+      
       <form method="POST" action="/signup">
       <div class="form-group">
           <label for="lastname">Username:  </label>
           <input type="text" class="form-control" name="username" placeholder="Enter a User Name.">
       </div>
+      
       <div class="form-group">
           <label for="lastname">Password:  </label>
           <input type="password" class="form-control" name="password" placeholder="Enter a Password.">
       </div>
+      
       <div class="form-group">
           <label for="phonenumber">Cell Phone:  </label>
           <input type="text" class="form-control" name="phonenumber" placeholder="Enter Your Cell #">
       </div>
+     
       <div class="form-group">
           <label for="email">Email:  </label>
           <input type="text" class="form-control" name="email" placeholder="Enter Your Email.">
       </div>
-
-      <button id="button" class="waves-effect waves-light btn-large">Submit</button>
+      <div class='btn-align-align'>
+                <button id="button" class="waves-effect waves-light btn-large">SUBMIT</button>
+      </div>
     </form>
+
+    <footer>
+            <% include ./partials/footer %>
+    </footer>
   </div>
 </body>
 </html>

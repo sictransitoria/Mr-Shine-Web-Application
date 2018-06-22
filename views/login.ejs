@@ -18,25 +18,30 @@
   <!-- | + ~((\☼.☼/))~ + | -->
 
   <div class="container">
+    <!-- Vector Sun -->
+    <img src="./images/sun.png" width=300px height=300px title="sun_log" alt="Friendly Sun">
       <div id="container-login">
           <h1 class="header">Login</h1>
         <form method="POST" action="/login">
-          <div class="form-group">
-              <label for="username">Username:   </label>
-                <input type="text" name="username" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter Username">
-          </div>
-          <div class="form-group">
-              <label for="username">Password:   </label>
-                <input type="password" name="password" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter Username">
-          </div>
-          <div>
-              <a href="/logout"><button id="button" class="btn btn-submit">LOGIN</button></a>
-          </div>
+            <div class="form-group">
+                <label for="username">Username:   </label>
+                  <input type="text" name="username" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter Username">
+            </div>
+            <div class="form-group">
+                <label for="username">Password:   </label>
+                  <input type="password" name="password" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter Username">
+            </div>
+            <div class='btn-align-align'>
+                <button id="button" class="waves-effect waves-light btn-large">LOGIN</button>
+            </div>
           </div>
         </form>
           <div id="register-id">
             <p>By signing up, you're agreeing to our Terms, Data Policy and Cookies Policy.</p>
           </div>
+        <footer>
+            <% include ./partials/footer %>
+        </footer>
       </div>
     </div>
 

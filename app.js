@@ -3,7 +3,6 @@
 const express = require('express');
 const ejs = require('ejs');
 const bodyParser = require('body-parser');
-const {Client} = require('pg');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const notifications = require('./notifications.js')
@@ -129,7 +128,7 @@ function processLoginCallback(req, username, password, done) {
             'username' :  username
 				},
     })
-    .then((user)=> {
+    .then((user) => {
         if (!user) {
             return done(null, false);
         } else if (password !== user.password){
@@ -151,7 +150,7 @@ function processLoginCallback(req, username, password, done) {
 // Configure the Local Strategy for use by Passport.
 passport.use(new Strategy(
   function(username, password, cb) {
-    db.users.findByUsername(username, function(err, user) {
+    db.users.findByUsername(username, (err, user) => {
       if (err) { return cb(err); }
       if (!user) { return cb(null, false); }
       if (user.password != password) { return cb(null, false); }
@@ -160,12 +159,12 @@ passport.use(new Strategy(
   }));
 
 // Configure Passport Authenticated Session Persistence.
-passport.serializeUser(function(user, cb) {
+passport.serializeUser( (user, cb) => {
   cb(null, user.id);
 });
 
-passport.deserializeUser(function(id, cb) {
-  db.users.findById(id, function (err, user) {
+passport.deserializeUser((id, cb) => {
+  db.users.findById(id, (err, user) => {
     if (err) { return cb(err); }
     cb(null, user);
   });
@@ -181,7 +180,7 @@ app.get('/', (req, res) => {
 });
 
 // GET Sign-Up 
-app.get('/signup', (req, res)=>{
+app.get('/signup', (req, res) => {
 	return res.render('signup');
 });
 
@@ -208,19 +207,21 @@ app.get('/logout', (req, res) => {
 // POST Routes
 
 // POST Sign-Up
-app.post('/signup', function(req,res, next){
-	passport.authenticate('local-signup', function(err, user){
+app.post('/signup', (req, res, next) => {
+	passport.authenticate('local-signup', (err, user) => {
 		if (err) {
 			return next(err);
 		} else {
-			return res.redirect('/')
+			return res.redirect('/login')
 		}
 	})(req, res, next);
 });
 
+let demandphone;
+
 // POST Login
-app.post('/login', function(req,res,next){
-		passport.authenticate('local-login', function(err, user){
+app.post('/login', (req,res,next) => {
+		passport.authenticate('local-login', (err, user) => {
 			if (err || user == false) {
 				return res.render('login', {message: "Incorrect Username/Password"})
 			} else {
@@ -229,28 +230,53 @@ app.post('/login', function(req,res,next){
 					return res.render('mr-shine', {user: req.user})
 				})
 			}
-		})(req, res, next);
+		}) (req, res, next);
+
+	const username = req.body.username;
+	console.log(username);
+
+	User.findOne({
+		where: {
+		  username: username
+	}
+  })
+	.then((row) => {
+		demandphone = row.dataValues.phonenumber;
+		console.log(demandphone);
+  })
 });
 
-// **** Twilio Credentials ****
+// SMS .. | + ~((\☼.☼/))~ + | ..
+
+ // **** Twilio Credentials ****
 const accountSid = "AC590f4900fcb04a7423584d08fbacc531";
 const authToken = "b03821fd6c6e71a9ef362e3fda3da746";
 const client = require('twilio')(accountSid, authToken);
-const cron = require('cron-scheduler')
+const cron = require('cron-scheduler');
 cronJob = require('cron').CronJob;
 
-var sendSMS = notifications.notifications[i];
-var numbers = [];
+app.post('/on-demand', (req, res) => {
+	//let phonenumber = req.params.phonenumber;
+	let shineMessage;
 
-for ( var i = 0; i < numbers.length; i++ ) {
-  client.messages.create( { to: numbers, from:'+18452633657', body: sendSMS}, function( err, data ) {
-  	console.log(sendSMS);
-  });
-}
+var currentIndex = notifications.notifications.length;
+var randomIndex = Math.floor(Math.random() * currentIndex);
+
+var sendSMS = notifications.notifications[randomIndex];
+console.log('*****' + randomIndex + '*****');
+console.log(notifications.notifications[randomIndex]);
+
+
+  		client.messages.create({ 
+			  to: demandphone, 
+  			  from:'+18452633657', 
+  			  body: sendSMS }, function( err, data ) {});
+  		return res.render('mr-shine')
+});
 
 // Loud and Clear
 app.listen(PORT, ()=>{
-	console.log('Listening on port:', PORT)
+	console.log('..| + ~((\☼.☼/))~ + |..')
 });
 
 

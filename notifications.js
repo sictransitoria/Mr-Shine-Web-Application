@@ -1,4 +1,5 @@
 // Notifications
+var i;
 var notifications = [
       
       'Find a beautiful piece of art...fall in love...admire it...and realize that that was created by human beings just like you, no more human, no less.', 
@@ -9,23 +10,13 @@ var notifications = [
       
       'You will do foolish things, but do them with enthusiasm.',
       
-      'Don’t try to be original. Be simple. Be good technically, and if there is something in you, it will come out.'
+      'Don’t try to be original. Be simple. Be good technically, and if there is something in you, it will come out.',
+
+      'We are all free, completely free. We can each do any damn thing we want. Which is more than most of us dare to imagine.',
+
+      'However bad life may seem, there is always something you can do, and succeed at. While there is life, there is hope.'
       
       ];
 
-var currentIndex = notifications.length, 
-                       randomIndex, 
-                       temporaryValue;
-
-    while (0 !== currentIndex) {
-
-    randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-
-    temporaryValue = notifications[currentIndex];
-    notifications[currentIndex] = notifications[randomIndex];
-    notifications[randomIndex] = temporaryValue;
-  
-  };
 
 module.exports = { notifications };
