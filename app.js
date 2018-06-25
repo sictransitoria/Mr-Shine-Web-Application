@@ -18,6 +18,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Protect Yoself
+const dotenv = require('dotenv');
+require('dotenv').config();
+dotenv.load();
+
 const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID,
       TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN,
       TWILIO_NUMBER = process.env.TWILIO_NUMBER;
@@ -30,7 +34,7 @@ app.use(express.static('public'));
 
 // CREATE DATABASE
 const Op = Sequelize.Op
-const sequelize = new Sequelize('mrshine', 'postgres', 'Runner4life!', {
+const sequelize = new Sequelize(process.env.DB_DATAB, process.env.DB_USER, process.env.DB_PASS, {
 	host: 'localhost',
 	port: '5432',
 	dialect: 'postgres',
@@ -267,8 +271,8 @@ app.post('/login', (req, res, next) => {
 // SMS .. | + ~((\☼.☼/))~ + | ..
 
 // **** Twilio Credentials ****
-const accountSid = "AC590f4900fcb04a7423584d08fbacc531";
-const authToken = "b03821fd6c6e71a9ef362e3fda3da746";
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 const client = require('twilio')(accountSid, authToken);
 
 // Randomize SMS
@@ -283,7 +287,7 @@ console.log(notifications.notifications[randomIndex]);
 
   		client.messages.create( { 
 			to: demandPhone, 
-  			from:'+18452633657', 
+  			from: TWILIO_NUMBER, 
   			body: sendSMS }, function( err, data ) {});
   		return res.render('mr-shine')
 });
@@ -336,7 +340,7 @@ var morningJob = new cronJob( '00 00 9 * * *', function(){
 		let scheduleNumber = row.dataValues.phonenumber;
   		  client.messages.create( { 
   		    to: scheduleNumber, 
-  		    from:'+18452633657', 
+  		    from: TWILIO_NUMBER, 
   		    body: sendSMS }, function( err, data ) {});
   		    console.log('*** SENT A MORNING TEXT ***');
   	  })
@@ -361,7 +365,7 @@ var afternoonJob = new cronJob( '00 15 21 * * *', function(){
 		let scheduleNumber = row.dataValues.phonenumber;
   		  client.messages.create( { 
   		    to: scheduleNumber, 
-  		    from:'+18452633657', 
+  		    from: TWILIO_NUMBER, 
   		    body: sendSMS }, function( err, data ) {});
   		    console.log('*** SENT AN AFTERNOON TEXT ***');
   	  })
@@ -386,7 +390,7 @@ var eveningJob = new cronJob( '00 00 17 * * *', function(){
 		let scheduleNumber = row.dataValues.phonenumber;
   		  client.messages.create( { 
   		    to: scheduleNumber, 
-  		    from:'+18452633657', 
+  		    from: TWILIO_NUMBER, 
   		    body: sendSMS }, function( err, data ) {});
   		    console.log('*** SENT AN EVENING TEXT ***');
   	  })
@@ -395,7 +399,7 @@ var eveningJob = new cronJob( '00 00 17 * * *', function(){
 	eveningJob.start();
 
 // LATE NIGHT 00 00 21
-var lateNightJob = new cronJob( '00 24 21 * * *', function(){
+var lateNightJob = new cronJob( '00 13 22 * * *', function(){
 	Schedule.findOne({
 		where: {
 			latenight: 't'
@@ -411,7 +415,7 @@ var lateNightJob = new cronJob( '00 24 21 * * *', function(){
 		let scheduleNumber = row.dataValues.phonenumber;
   		  client.messages.create( { 
   		    to: scheduleNumber, 
-  		    from:'+18452633657', 
+  		    from: TWILIO_NUMBER, 
   		    body: sendSMS }, function( err, data ) {});
   		    console.log('*** SENT A LATE-NIGHT TEXT ***');
   	  })

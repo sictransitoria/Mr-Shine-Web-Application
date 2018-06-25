@@ -17,6 +17,12 @@ var notifications = [
       'However bad life may seem, there is always something you can do, and succeed at. While there is life, there is hope.',
 
       'If there is any kind of magic in this world...it must be in the attempt of understanding someone, sharing something.',
+
+      'You wanna fly, you got to give up the stuff that weighs you down.',
+
+      'People with self-respect exhibit a certain toughness, a kind of moral nerve; they display what was once called character...character—the willingness to accept responsibility for their own own life.',
+
+      'What you need to do is start living in the moment. You have to live moment to moment... You have got to learn how to smoke the cigarette, not act smoking the cigarette. You need to drink the drink, not act drinking the drink. You have to do things and not show them.'
       
       ];
 
