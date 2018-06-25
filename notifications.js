@@ -14,7 +14,9 @@ var notifications = [
 
       'We are all free, completely free. We can each do any damn thing we want. Which is more than most of us dare to imagine.',
 
-      'However bad life may seem, there is always something you can do, and succeed at. While there is life, there is hope.'
+      'However bad life may seem, there is always something you can do, and succeed at. While there is life, there is hope.',
+
+      'If there is any kind of magic in this world...it must be in the attempt of understanding someone, sharing something.',
       
       ];
 

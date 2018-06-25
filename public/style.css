@@ -82,7 +82,7 @@ body {
   font-size: 36px;
   color: #F6A623;
   letter-spacing: 2.99px;
-  margin: 20px 150px 50px 150px;
+  margin: 20px 150px 0px 150px;
 
 }
 
@@ -106,9 +106,14 @@ body {
   background: -ms-linear-gradient(top,  #63B8EE,  #468CCF);
 
 }
+#white-button a:hover {
+  background-color: #6FB3FF;
+
+}
 
 .btn-align a:hover {
   background-color: #99ddff;
+  letter-spacing: 5px;
 
 }
 
@@ -183,26 +188,26 @@ h3 {
 
 }
 
-.picker {
-    font-size: 25px;
-    text-align: left;
-    line-height: 1.2;
-    color: #000000;
-    position: absolute;
-    /*z-index: 10000;*/
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-    outline: none;
-
-}
-
 hr {
     border: 0;
     height: 0;
     border-top: 1px solid #ffffff;
     border-bottom: 1px solid #ffffff;
+
+}
+
+#schedule-text {
+  margin: 0px 0px 40px 165px;
+
+}
+
+#schedule-text li {
+    display: inline-block;
+    margin: 30px 37px 0px 0px;
+    color: #ffffff;
+    font-size: 13px;
+    font-family: AmericanTypewriter;
+
 }
 
 #register-id {
@@ -210,16 +215,6 @@ hr {
   text-align: center;
   font-family: AmericanTypewriter;
 
-}
-
-.picker__date-display {
-  background-color: #6FB3FF;
-
-}
-
-.picker__close, .picker__today, .picker__clear {
-  color: #6FB3FF;
-  
 }
 
 .btn, .btn-large {
@@ -240,7 +235,8 @@ hr {
   font-size: 20px;
   text-shadow: 1px 1px 0px #7CACDE;
   box-shadow: 1px 1px 1px #BEE2F9;
-  padding: 1px 25px;
+  padding: 1px 30px;
+  margin: 5px;
   -moz-border-radius: 10px;
   -webkit-border-radius: 10px;
   border-radius: 10px;

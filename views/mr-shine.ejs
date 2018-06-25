@@ -25,18 +25,33 @@
 				<img src="../images/sun.png" width=300px height=300px title="sun_log" alt="Friendly Sun">
 
 		<div class="center-btn">
-				<a class="waves-effect waves-light btn-large" href="/logout">Log Out</a>
+
+		<!-- Modal Trigger -->
+  				<a class="waves-effect waves-light btn modal-trigger" href="#modal1">How It Works.</a>
+
+  		<!-- Modal Structure -->
+  			<div id="modal1" class="modal">
+    			<div class="modal-content">
+      					<p>Simply select the time frame you would like to receive a message from Mr. Shine. Once you're all set, tap the 'SUBMIT' button below to save your preferences. You can always log back in and change them at any time.</p>
+    			</div>
+  				<div class="modal-footer">
+      				<a href="#!" class="modal-close waves-effect waves btn-flat">Sounds Good. </a>
+    			</div>
+    		</div>		
+    				<a class="waves-effect waves-light btn-large" href="/logout">Log Out</a>
     	</div>
 
     	<!-- Headline Text -->
 		<h1 class="mrShineHeader">Mr. Shine</h1>
+
+		<form method="POST" action="/schedule">
 
 		 <!-- Morning Switch -->
 		 <div id="borderBox">
 			  <div class="switch" id="switchItUp">
 			  	 <h3>Morning</h3>
 			    <label>
-			     	<input type="checkbox" name="timepicker" class="timepicker-morning" onselect="myFunction()">
+			     	<input type="checkbox" name="morning">
 			     	<span class="lever"></span>
 			    </label>
 			  </div>
@@ -47,7 +62,7 @@
 		  <div class="switch">
 		  	<h3>Afternoon</h3>
 		    <label>
-		      <input type="checkbox" name="timepicker" class="timepicker-afternoon">
+		      <input type="checkbox" name="afternoon">
 		      <span class="lever"></span>
 		    </label>
 		  </div>
@@ -58,7 +73,7 @@
 		  <div class="switch">
 		  	<h3>Evening</h3>
 		    <label>
-		      <input type="checkbox" name="timepicker" class="timepicker-evening">
+		      <input type="checkbox" name="evening">
 		      <span class="lever"></span>
 		    </label>
 		  </div>
@@ -69,23 +84,37 @@
 		  <div class="switch">
 		  	<h3>Late Night</h3>
 		    <label>
-		      <input type="checkbox" name="timepicker" class="timepicker-late-night">
+		      <input type="checkbox" name="latenight">
 		      <span class="lever"></span>
 		    </label>
 		  </div>
 		 </div>
+
+		 <div id="schedule-text">
+			<ul>
+				<li>Morning: 9:00a</li>
+				<li>Afternoon: 12:30p</li>
+				<li>Evening: 5:00p</li>
+				<li>Late Night: 9:00p</li>
+			</ul>
+		</div>
+
+		<div class="btn-align-align">
+			<button id="button" class="waves-effect waves-light btn-large" style="margin: 0px 10px 15px 293px;">SUBMIT</button>
+		</div>
+		</form>
 
 		 <!-- On Demand Switch -->
 		 <div id="borderBox">
 		  	<h3 style="font-size: 56px; margin-left: 18px">Get a Text Now!</h3>
 		    <label>
 		    <div class="btn-align-align">
-				<form method="POST" action="/on-demand"><button id="button" class="waves-effect waves-light btn-large">+=</button></form>
+				<form method="POST" action="/on-demand"><button id="button" class="waves-effect waves-light btn-large" style="margin: 0px 10px 40px 135px;">Shine On</button></form>
 			</div>
 		    </label>
 		 </div>
 
-	<hr width="10%">
+	<hr width="10%" style="margin-top: 40px">
 
 		<footer>
 				<% include ./partials/footer %>

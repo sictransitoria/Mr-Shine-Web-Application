@@ -17,12 +17,16 @@ const app = express();
 // Loud and Clear
 const PORT = process.env.PORT || 3000;
 
+// Protect Yoself
+const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID,
+      TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN,
+      TWILIO_NUMBER = process.env.TWILIO_NUMBER;
+
 // Configure View Engine to Render EJS.
 app.set('view engine', 'ejs');
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static('public'));
-
 
 // CREATE DATABASE
 const Op = Sequelize.Op
@@ -39,14 +43,24 @@ const sequelize = new Sequelize('mrshine', 'postgres', 'Runner4life!', {
 	}
 });
 
-// CREATE TABLE
-const User = sequelize.define('users', {
+// CREATE TABLE(s)
+const User = sequelize.define('user', {
 	username: Sequelize.STRING,
 	password: Sequelize.STRING,
 	phonenumber: Sequelize.STRING,
 	email: Sequelize.STRING
 
 });
+
+const Schedule = sequelize.define('schedule', {
+	morning: Sequelize.BOOLEAN,
+	afternoon: Sequelize.BOOLEAN,
+	evening: Sequelize.BOOLEAN,
+	latenight: Sequelize.BOOLEAN
+
+});
+
+Schedule.belongsTo(User);  // Will add an ID attribute to User to hold the primary key value for Schedule
 
 const sessionStore = new SequelizeStore({
     db: sequelize
@@ -74,7 +88,7 @@ passport.serializeUser(function(user, done) {
 			done(null, obj);
 });
 
-// * Start Passport Local Config *
+// * Start Passport Sign-Up *
 
 // Passport Sign-up
 passport.use('local-signup', new LocalStrategy({
@@ -122,7 +136,6 @@ passport.use('local-login', new LocalStrategy({
 }, processLoginCallback));
 
 function processLoginCallback(req, username, password, done) {
-    // first search to see if a user exists in our system with that email
     User.findOne({
         where: {
             'username' :  username
@@ -143,11 +156,11 @@ function processLoginCallback(req, username, password, done) {
 
 // * Passport Middleware *
 
-// Must be Initialized in order for Passport to work.
+// Must be Initialized in Order for Passport to Work
   app.use(passport.initialize());
   app.use(passport.session());
 
-// Configure the Local Strategy for use by Passport.
+// Configure the Local Strategy for use by Passport
 passport.use(new Strategy(
   function(username, password, cb) {
     db.users.findByUsername(username, (err, user) => {
@@ -158,7 +171,7 @@ passport.use(new Strategy(
     });
   }));
 
-// Configure Passport Authenticated Session Persistence.
+// Configure Passport Authenticated Session Persistence
 passport.serializeUser( (user, cb) => {
   cb(null, user.id);
 });
@@ -189,9 +202,13 @@ app.get('/login', (req, res) => {
     return res.render('login');
 });
 
-// GET Mr. Shine, that rascal
+// GET Mr. Shine
 app.get('/mr-shine', (req, res) => {
-  Note.findAll().then((rows) => {
+  User.findOne({
+  	where: {
+  		// username: username
+  	}
+  }).then((rows) => {
   	return rows
   })
   .then((rows) => {
@@ -217,10 +234,11 @@ app.post('/signup', (req, res, next) => {
 	})(req, res, next);
 });
 
-let demandphone;
+let demandPhone;
+let username;
 
 // POST Login
-app.post('/login', (req,res,next) => {
+app.post('/login', (req, res, next) => {
 		passport.authenticate('local-login', (err, user) => {
 			if (err || user == false) {
 				return res.render('login', {message: "Incorrect Username/Password"})
@@ -232,7 +250,7 @@ app.post('/login', (req,res,next) => {
 			}
 		}) (req, res, next);
 
-	const username = req.body.username;
+	username = req.body.username;
 	console.log(username);
 
 	User.findOne({
@@ -241,38 +259,165 @@ app.post('/login', (req,res,next) => {
 	}
   })
 	.then((row) => {
-		demandphone = row.dataValues.phonenumber;
-		console.log(demandphone);
+		demandPhone = row.dataValues.phonenumber;
+		console.log(demandPhone);
   })
 });
 
 // SMS .. | + ~((\☼.☼/))~ + | ..
 
- // **** Twilio Credentials ****
+// **** Twilio Credentials ****
 const accountSid = "AC590f4900fcb04a7423584d08fbacc531";
 const authToken = "b03821fd6c6e71a9ef362e3fda3da746";
 const client = require('twilio')(accountSid, authToken);
-const cron = require('cron-scheduler');
-cronJob = require('cron').CronJob;
 
-app.post('/on-demand', (req, res) => {
-	//let phonenumber = req.params.phonenumber;
-	let shineMessage;
-
+// Randomize SMS
 var currentIndex = notifications.notifications.length;
 var randomIndex = Math.floor(Math.random() * currentIndex);
-
 var sendSMS = notifications.notifications[randomIndex];
+
+// POST to Send On-Demand Messages With One Click
+app.post('/on-demand', (req, res) => {
 console.log('*****' + randomIndex + '*****');
 console.log(notifications.notifications[randomIndex]);
 
-
-  		client.messages.create({ 
-			  to: demandphone, 
-  			  from:'+18452633657', 
-  			  body: sendSMS }, function( err, data ) {});
+  		client.messages.create( { 
+			to: demandPhone, 
+  			from:'+18452633657', 
+  			body: sendSMS }, function( err, data ) {});
   		return res.render('mr-shine')
 });
+
+app.post('/schedule', (req, res) => {
+	console.log('***** Morning ****', req.body.morning);
+	console.log('***** Afternoon ****', req.body.afternoon);
+	console.log('***** Evening ****', req.body.evening);
+	console.log('***** Late Night ****', req.body.latenight);
+	console.log('****** Username ****', username);
+
+	User.findOne({
+		where: {
+			username: username
+		}
+	})
+	.then((row)=>{
+		console.log('**** User ID ****', row.dataValues.id)
+		let userId = row.dataValues.id;
+	
+	Schedule.create({
+		morning: req.body.morning,
+		afternoon: req.body.afternoon,
+		evening: req.body.evening,
+		latenight: req.body.latenight,
+		userId: userId
+		
+		})
+	})
+});	
+
+// Set Cron Jobs to send SMS messages at specific time(s)
+const cron = require('cron-scheduler');
+const cronJob = require('cron').CronJob;
+
+// MORNING 00 9
+var morningJob = new cronJob( '00 00 9 * * *', function(){
+	Schedule.findOne({
+		where: {
+			morning: 't'
+		}
+	})
+	.then((row) => {
+		User.findOne({ 
+			where: { 
+			id: row.dataValues.userId 
+		}
+	})
+	.then((row) => {
+		let scheduleNumber = row.dataValues.phonenumber;
+  		  client.messages.create( { 
+  		    to: scheduleNumber, 
+  		    from:'+18452633657', 
+  		    body: sendSMS }, function( err, data ) {});
+  		    console.log('*** SENT A MORNING TEXT ***');
+  	  })
+  	})
+});
+	morningJob.start();
+
+// AFTERNOON 30 12
+var afternoonJob = new cronJob( '00 15 21 * * *', function(){
+	Schedule.findOne({
+		where: {
+			afternoon: 't'
+		}
+	})
+	.then((row) => {
+		User.findOne({ 
+			where: { 
+			id: row.dataValues.userId 
+		}
+	})
+	.then((row) => {
+		let scheduleNumber = row.dataValues.phonenumber;
+  		  client.messages.create( { 
+  		    to: scheduleNumber, 
+  		    from:'+18452633657', 
+  		    body: sendSMS }, function( err, data ) {});
+  		    console.log('*** SENT AN AFTERNOON TEXT ***');
+  	  })
+  	})
+});
+	afternoonJob.start();
+
+// EVENING 00 00 17
+var eveningJob = new cronJob( '00 00 17 * * *', function(){
+	Schedule.findOne({
+		where: {
+			evening: 't'
+		}
+	})
+	.then((row) => {
+		User.findOne({ 
+			where: { 
+			id: row.dataValues.userId 
+		}
+	})
+	.then((row) => {
+		let scheduleNumber = row.dataValues.phonenumber;
+  		  client.messages.create( { 
+  		    to: scheduleNumber, 
+  		    from:'+18452633657', 
+  		    body: sendSMS }, function( err, data ) {});
+  		    console.log('*** SENT AN EVENING TEXT ***');
+  	  })
+  	})
+});
+	eveningJob.start();
+
+// LATE NIGHT 00 00 21
+var lateNightJob = new cronJob( '00 24 21 * * *', function(){
+	Schedule.findOne({
+		where: {
+			latenight: 't'
+		}
+	})
+	.then((row) => {
+		User.findOne({ 
+			where: { 
+			id: row.dataValues.userId 
+		}
+	})
+	.then((row) => {
+		let scheduleNumber = row.dataValues.phonenumber;
+  		  client.messages.create( { 
+  		    to: scheduleNumber, 
+  		    from:'+18452633657', 
+  		    body: sendSMS }, function( err, data ) {});
+  		    console.log('*** SENT A LATE-NIGHT TEXT ***');
+  	  })
+  	})
+});
+	lateNightJob.start();
 
 // Loud and Clear
 app.listen(PORT, ()=>{
