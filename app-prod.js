@@ -22,6 +22,7 @@ const dotenv = require('dotenv');
 require('dotenv').config();
 dotenv.load();
 
+// Twilio Credentials
 const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID,
       TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN,
       TWILIO_NUMBER = process.env.TWILIO_NUMBER;
@@ -315,8 +316,8 @@ app.post('/schedule', (req, res) => {
 		latenight: req.body.latenight,
 		userId: userId
 		
+		})
 	})
-  })
 });	
 
 // Set Cron Jobs to send SMS messages at specific time(s)
@@ -349,7 +350,7 @@ var morningJob = new cronJob( '00 00 9 * * *', function(){
 	morningJob.start();
 
 // AFTERNOON 30 12
-var afternoonJob = new cronJob( '00 30 12 * * *', function(){
+var afternoonJob = new cronJob( '00 15 21 * * *', function(){
 	Schedule.findOne({
 		where: {
 			afternoon: 't'
@@ -399,7 +400,7 @@ var eveningJob = new cronJob( '00 00 17 * * *', function(){
 	eveningJob.start();
 
 // LATE NIGHT 00 00 21
-var lateNightJob = new cronJob( '00 57 21 * * *', function(){
+var lateNightJob = new cronJob( '00 13 22 * * *', function(){
 	Schedule.findOne({
 		where: {
 			latenight: 't'
