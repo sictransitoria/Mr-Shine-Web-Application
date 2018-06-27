@@ -45,7 +45,7 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 		$eq: Op.eq,
 		$like: Op.like,
 		$iLike: Op.iLike
-
+  }
 });
 
 // CREATE TABLE(s)
