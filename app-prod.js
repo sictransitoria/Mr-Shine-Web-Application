@@ -15,7 +15,7 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const app = express();
 
 // Loud and Clear
-const PORT = process.env.PORT || 3000;
+// const PORT = process.env.PORT || 3000;
 
 // Protect Yoself
 const dotenv = require('dotenv');
