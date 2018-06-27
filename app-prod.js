@@ -34,19 +34,20 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(express.static('public'));
 
 // CREATE DATABASE
-const Op = Sequelize.Op
-const sequelize = new Sequelize(process.env.DB_DATAB, process.env.DB_USER, process.env.DB_PASS, {
-	host: 'localhost',
-	port: '5432',
-	dialect: 'postgres',
-	operatorsAliases: {
-		$and: Op.and,
-		$or: Op.or,
-		$eq: Op.eq,
-		$like: Op.like,
-		$iLike: Op.iLike
-	}
-}); 
+// const Op = Sequelize.Op
+const sequelize = new Sequelize(process.env.DATABASE_URL, {
+	ssl: true,
+// 	host: 'localhost',
+// 	port: '5432',
+// 	dialect: 'postgres',
+// 	operatorsAliases: {
+// 		$and: Op.and,
+// 		$or: Op.or,
+// 		$eq: Op.eq,
+// 		$like: Op.like,
+// 		$iLike: Op.iLike
+// 	}
+});
 
 // CREATE TABLE(s)
 const User = sequelize.define('user', {
