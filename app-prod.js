@@ -23,9 +23,9 @@ require('dotenv').config();
 dotenv.load();
 
 // Twilio Credentials
-const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID,
-      TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN,
-      TWILIO_NUMBER = process.env.TWILIO_NUMBER;
+// const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID,
+//       TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN,
+//       TWILIO_NUMBER = process.env.TWILIO_NUMBER;
 
 // Configure View Engine to Render EJS.
 app.set('view engine', 'ejs');

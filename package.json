@@ -8,7 +8,7 @@
     "start": "node server.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Michael Oria",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^2.0.1",
