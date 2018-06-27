@@ -73,6 +73,16 @@ const sessionStore = new SequelizeStore({
 
 });
 
+sequelize.sync().then(function() {
+    console.log("Database synced");
+    const port = process.env.PORT || 3000;
+
+
+    app.listen(port, function() {
+        console.log("Your server is available at http://localhost:3000");
+    });
+});
+
 sequelize.sync();
 sessionStore.sync();
 
