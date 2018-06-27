@@ -35,7 +35,7 @@ app.use(express.static('public'));
 
 // CREATE DATABASE
 // const Op = Sequelize.Op
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize(process.env.DATABASE_URL);
 // 	host: 'localhost',
 // 	port: '5432',
 // 	dialect: 'postgres',
@@ -46,7 +46,6 @@ const sequelize = new Sequelize(process.env.DATABASE_URL, {
 // 		$like: Op.like,
 // 		$iLike: Op.iLike
 // 	}
-});
 
 // CREATE TABLE(s)
 const User = sequelize.define('user', {
