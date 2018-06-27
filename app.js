@@ -81,7 +81,7 @@ const passport = require('passport');
 
 // -- Sessions -- 
 passport.serializeUser(function(user, done) {
-		console.log("********* Serialize User *********")
+		console.log("***** Serialize User *****")
       done(null, user)
 });
 
@@ -104,7 +104,7 @@ passport.use('local-signup', new LocalStrategy({
 }, processSignupCallback));
 
 function processSignupCallback(req, username, password, done) {
-    // Search to see if the user exists in the database
+    // Search to See if the User Exists in the Database
     User.findOne({
         where: {
             'username' :  username
@@ -304,7 +304,7 @@ app.post('/schedule', (req, res) => {
 			username: username
 		}
 	})
-	.then((row)=>{
+	.then((row) => {
 		console.log('**** User ID ****', row.dataValues.id)
 		let userId = row.dataValues.id;
 	
@@ -314,10 +314,35 @@ app.post('/schedule', (req, res) => {
 		evening: req.body.evening,
 		latenight: req.body.latenight,
 		userId: userId
-		
+
 	})
   })
-});	
+});
+
+// app.get('/schedule', (req, res) => {
+// 		where: {
+// 			username: username
+// 		}
+// 	})
+// 	.then((row) => {
+// 		Schedule.findOne({
+// 			where: {
+// 				userId: row.dataValues.id
+// 		}
+// 	})
+// 	.then((row) => {
+// 		if(row == null) {
+		
+// 		scheduleUpdate == false
+		
+// 		} else {
+
+// 		scheduleUpdate == true
+
+// 		}
+// 		return res.render('mr-shine', { row, user: username, schedule: scheduleUpdate });
+//   })
+// });
 
 // Set Cron Jobs to send SMS messages at specific time(s)
 const cron = require('cron-scheduler');
