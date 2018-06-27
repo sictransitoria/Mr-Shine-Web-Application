@@ -46,7 +46,7 @@ const sequelize = new Sequelize(process.env.DB_DATAB, process.env.DB_USER, proce
 		$like: Op.like,
 		$iLike: Op.iLike
 	}
-});
+}); 
 
 // CREATE TABLE(s)
 const User = sequelize.define('user', {
