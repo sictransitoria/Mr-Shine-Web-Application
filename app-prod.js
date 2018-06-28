@@ -35,7 +35,7 @@ app.use(express.static('public'));
 
 // CREATE DATABASE
 const Op = Sequelize.Op
-const sequelize = new Sequelize(DATABASE_URL, {
+const sequelize = new Sequelize(DATABASE_URL {
 	protocol: 'postgres',
 	ssl: true,
 	dialect: 'postgres',
