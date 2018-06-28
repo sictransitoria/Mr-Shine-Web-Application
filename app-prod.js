@@ -15,14 +15,13 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const app = express();
 
 // Loud and Clear
-// const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
 // Protect Yoself
 const dotenv = require('dotenv');
 require('dotenv').config();
 dotenv.load();
 
-// Twilio Credentials
 const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID,
       TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN,
       TWILIO_NUMBER = process.env.TWILIO_NUMBER;
@@ -35,7 +34,7 @@ app.use(express.static('public'));
 
 // CREATE DATABASE
 const Op = Sequelize.Op
-const sequelize = new Sequelize(process.env.DATABASE_URL, {
+const sequelize = new Sequelize(DATABASE_URL, {
 	protocol: 'postgres',
 	ssl: true,
 	dialect: 'postgres',
@@ -72,16 +71,6 @@ const sessionStore = new SequelizeStore({
 
 });
 
-sequelize.sync().then(function() {
-    console.log("Database synced");
-    const port = process.env.PORT || 3000;
-
-
-    app.listen(port, function() {
-        console.log("Your server is available at http://localhost:3000");
-    });
-});
-
 sequelize.sync();
 sessionStore.sync();
 
@@ -92,7 +81,7 @@ const passport = require('passport');
 
 // -- Sessions -- 
 passport.serializeUser(function(user, done) {
-		console.log("********* Serialize User *********")
+		console.log("***** Serialize User *****")
       done(null, user)
 });
 
@@ -115,7 +104,7 @@ passport.use('local-signup', new LocalStrategy({
 }, processSignupCallback));
 
 function processSignupCallback(req, username, password, done) {
-    // Search to see if the user exists in the database
+    // Search to See if the User Exists in the Database
     User.findOne({
         where: {
             'username' :  username
@@ -315,7 +304,7 @@ app.post('/schedule', (req, res) => {
 			username: username
 		}
 	})
-	.then((row)=>{
+	.then((row) => {
 		console.log('**** User ID ****', row.dataValues.id)
 		let userId = row.dataValues.id;
 	
@@ -325,10 +314,37 @@ app.post('/schedule', (req, res) => {
 		evening: req.body.evening,
 		latenight: req.body.latenight,
 		userId: userId
-		
-		})
+
 	})
-});	
+  })
+});
+
+console.log("Hey")
+
+// app.get('/schedule', (req, res) => {
+// 	User.findOne({
+// 		where: {
+// 			username: username
+// 		}
+// 	})
+// 	.then((row) => {
+// 		Schedule.findOne({
+// 			where: {
+// 				userId: row.dataValues.id
+// 		}
+// 	})
+// 	.then((row) => {
+// 		if(row == null) {
+// 		scheduleUpdate = false
+		
+// 		} else {
+// 		scheduleUpdate = true
+
+// 		}
+// 		return res.render('mr-shine', { row, user: username, schedule: scheduleUpdate });
+//     })
+//   })
+// });
 
 // Set Cron Jobs to send SMS messages at specific time(s)
 const cron = require('cron-scheduler');
@@ -360,7 +376,7 @@ var morningJob = new cronJob( '00 00 9 * * *', function(){
 	morningJob.start();
 
 // AFTERNOON 30 12
-var afternoonJob = new cronJob( '00 15 21 * * *', function(){
+var afternoonJob = new cronJob( '00 30 12 * * *', function(){
 	Schedule.findOne({
 		where: {
 			afternoon: 't'
@@ -410,7 +426,7 @@ var eveningJob = new cronJob( '00 00 17 * * *', function(){
 	eveningJob.start();
 
 // LATE NIGHT 00 00 21
-var lateNightJob = new cronJob( '00 13 22 * * *', function(){
+var lateNightJob = new cronJob( '00 00 21 * * *', function(){
 	Schedule.findOne({
 		where: {
 			latenight: 't'
