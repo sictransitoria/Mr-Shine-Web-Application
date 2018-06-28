@@ -319,7 +319,10 @@ app.post('/schedule', (req, res) => {
   })
 });
 
+console.log("Hey")
+
 // app.get('/schedule', (req, res) => {
+// 	User.findOne({
 // 		where: {
 // 			username: username
 // 		}
@@ -332,15 +335,14 @@ app.post('/schedule', (req, res) => {
 // 	})
 // 	.then((row) => {
 // 		if(row == null) {
-		
-// 		scheduleUpdate == false
+// 		scheduleUpdate = false
 		
 // 		} else {
-
-// 		scheduleUpdate == true
+// 		scheduleUpdate = true
 
 // 		}
 // 		return res.render('mr-shine', { row, user: username, schedule: scheduleUpdate });
+//     })
 //   })
 // });
 
@@ -424,7 +426,7 @@ var eveningJob = new cronJob( '00 00 17 * * *', function(){
 	eveningJob.start();
 
 // LATE NIGHT 00 00 21
-var lateNightJob = new cronJob( '00 57 21 * * *', function(){
+var lateNightJob = new cronJob( '00 00 21 * * *', function(){
 	Schedule.findOne({
 		where: {
 			latenight: 't'
