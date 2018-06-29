@@ -5,7 +5,8 @@ const ejs = require('ejs');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const notifications = require('./notifications.js')
+const notifications = require('./notifications.js');
+const url = require('url-parse');
 
 // Sequelize Variables
 const Sequelize = require('sequelize');

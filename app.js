@@ -208,15 +208,27 @@ app.get('/login', (req, res) => {
 
 // GET Mr. Shine
 app.get('/mr-shine', (req, res) => {
-  User.findOne({
-  	where: {
-  		// username: username
-  	}
-  }).then((rows) => {
-  	return rows
-  })
-  .then((rows) => {
-  	return res.render('mr-shine', {rows})
+  	User.findOne({
+		where: {
+			username: username
+		}
+	})
+	.then((row) => {
+		Schedule.findOne({
+			where: {
+				userId: row.dataValues.id
+		}
+	})
+	.then((row) => {
+		if(row == null) {
+		scheduleUpdate = false
+		
+		} else {
+		scheduleUpdate = true
+
+		}
+		return res.render('mr-shine', { row, user: username, schedule: scheduleUpdate });
+    })
   })
 });
 
@@ -319,32 +331,6 @@ app.post('/schedule', (req, res) => {
   })
 });
 
-console.log("Hey")
-
-// app.get('/schedule', (req, res) => {
-// 	User.findOne({
-// 		where: {
-// 			username: username
-// 		}
-// 	})
-// 	.then((row) => {
-// 		Schedule.findOne({
-// 			where: {
-// 				userId: row.dataValues.id
-// 		}
-// 	})
-// 	.then((row) => {
-// 		if(row == null) {
-// 		scheduleUpdate = false
-		
-// 		} else {
-// 		scheduleUpdate = true
-
-// 		}
-// 		return res.render('mr-shine', { row, user: username, schedule: scheduleUpdate });
-//     })
-//   })
-// });
 
 // Set Cron Jobs to send SMS messages at specific time(s)
 const cron = require('cron-scheduler');

@@ -27,6 +27,7 @@
     "pg": "7.4.3",
     "sequelize": "^4.37.7",
     "sequelize-cli": "^4.0.0",
-    "twilio": "^3.16.0"
+    "twilio": "^3.16.0",
+    "url-parse": "^1.4.1"
   }
 }
