@@ -80,13 +80,13 @@ const Strategy = require('passport-local').Strategy;
 const passport = require('passport');
 
 // -- Sessions -- 
-passport.serializeUser(function(user, done) {
+passport.serializeUser(function (user, done) {
 		console.log("***** Serialize User *****")
       done(null, user)
 });
 
 // Convert ID in Cookie to User Details
-	passport.deserializeUser(function(obj,done){
+	passport.deserializeUser(function (obj,done) {
 		console.log("-- deserializeUser --");
 		console.log(obj)	
 			done(null, obj);
@@ -119,7 +119,7 @@ function processSignupCallback(req, username, password, done) {
 // Create a New User
 			let newUser = req.body;
 			User.create(newUser)
-			.then((user)=>{
+			.then((user) => {
 			   console.log("User has been created.")
 			    return done(null, user);
 			})
