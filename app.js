@@ -25,6 +25,7 @@ dotenv.load();
 const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID,
       TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN,
       TWILIO_NUMBER = process.env.TWILIO_NUMBER;
+      DATABASE_URL = process.env.DATABASE_URL;
 
 // Configure View Engine to Render EJS.
 app.set('view engine', 'ejs');
@@ -34,7 +35,7 @@ app.use(express.static('public'));
 
 // CREATE DATABASE
 const Op = Sequelize.Op
-const sequelize = new Sequelize(process.env.DB_DATAB, process.env.DB_USER, process.env.DB_PASS, {
+const sequelize = new Sequelize(process.env.DATABASE_URL, process.env.DB_DATAB, process.env.DB_USER, process.env.DB_PASS, {
 	host: 'localhost',
 	port: '5432',
 	dialect: 'postgres',

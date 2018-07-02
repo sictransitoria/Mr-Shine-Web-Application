@@ -27,6 +27,7 @@ const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID,
       TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN,
       TWILIO_NUMBER = process.env.TWILIO_NUMBER;
       DATABASE_URL = process.env.DATABASE_URL;
+      DB_USER = process.env.DB_USER 
 
 // Configure View Engine to Render EJS.
 app.set('view engine', 'ejs');
