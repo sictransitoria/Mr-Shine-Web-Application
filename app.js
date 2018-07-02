@@ -38,7 +38,7 @@ const Op = Sequelize.Op
 const sequelize = new Sequelize(process.env.DATABASE_URL, process.env.DB_DATAB, process.env.DB_USER, process.env.DB_PASS, {
 	host: 'localhost',
 	port: '5432',
-	dialect: 'postgresql',
+	// dialect: 'postgresql',
 	operatorsAliases: {
 		$and: Op.and,
 		$or: Op.or,
