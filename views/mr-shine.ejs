@@ -21,9 +21,11 @@
 
 	<div class="container">
 
+		<div class="wrapper">
+
 		<!-- Vector Sun -->
 				<img src="../images/sun.png" width=300px height=300px title="sun_log" alt="Friendly Sun">
-
+		
 		<div class="center-btn">
 
 		<!-- Modal Trigger -->
@@ -41,6 +43,8 @@
     		</div>		
     				<a class="waves-effect waves-light btn-large" href="/logout">Log Out</a>
     	</div>
+    	</div>
+
 
     	<!-- Headline Text -->
 		<h1 class="mrShineHeader">Mr. Shine</h1>
@@ -106,11 +110,11 @@
 		</form>
 
 		 <!-- On Demand Switch -->
-		 <div id="borderBox">
-		  	<h3 style="font-size: 50px; margin-left: 20px">At Your Request.</h3>
+		 <div id="borderBox-request">
+		  	<h3>At Your Request.</h3>
 		    <label>
 		    <div class="btn-align-align">
-				<form method="POST" action="/on-demand"><button id="button" onclick="onDemandAlert()" class="waves-effect waves-light btn-large" style="margin: 0px 10px 40px 140px;">Shine On</button></form>
+				<form method="POST" action="/on-demand"><button id="button" onclick="onDemandAlert()" class="waves-effect waves-light btn-large">Shine On</button></form>
 
 			</div>
 		    </label>

@@ -29,5 +29,8 @@
     "sequelize-cli": "^4.0.0",
     "twilio": "^3.16.0",
     "url-parse": "^1.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^5.0.1"
   }
 }

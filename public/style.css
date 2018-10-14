@@ -15,6 +15,8 @@ body {
   background-color: #6FB3FF;
   padding-bottom: 20px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
 
 }
 
@@ -82,7 +84,30 @@ body {
   font-size: 36px;
   color: #F6A623;
   letter-spacing: 2.99px;
-  margin: 20px 150px 0px 150px;
+  margin: 30px 120px 0px 120px;
+  justify-content: center;
+
+}
+
+#borderBox-request {
+  font-family: AmericanTypewriter-Bold;
+  background-color: #ffffff;
+  box-shadow: 4px 4px 4px 0 rgba(0,0,0,0.50);
+  color: #F6A623;
+  letter-spacing: 2.99px;
+  margin: 30px 120px 0px 120px;
+  justify-content: center;
+
+}
+
+#borderBox-request h3 {
+  font-size: 50px;
+  margin: 30px;
+
+}
+
+#borderBox-request button {
+  margin: 0px 10px 30px 168px;
 
 }
 
