@@ -7,16 +7,19 @@
 body {
   font-family: AmericanTypewriter-Bold, sans-serif;
   display: flex;
+  justify-content: center;
+  /*margin-top: 10px;*/
 
 }
 
 .container {
-  width: 60%;
+  width: 70%;
   background-color: #6FB3FF;
   padding-bottom: 20px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  position: fixed;
 
 }
 
@@ -63,7 +66,8 @@ body {
 
 .mrShineHeader {
   color: #ffffff;
-  margin: 0px 0px 0px 150px;
+  position: relative;
+  text-align: center;
   font-size: 112px;
 
 }
@@ -85,7 +89,8 @@ body {
   color: #F6A623;
   letter-spacing: 2.99px;
   margin: 30px 120px 0px 120px;
-  justify-content: center;
+  display: flex;
+  align-items: center;
 
 }
 
@@ -107,7 +112,7 @@ body {
 }
 
 #borderBox-request button {
-  margin: 0px 10px 30px 168px;
+  margin: 0px 10px 30px 160px;
 
 }
 

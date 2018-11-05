@@ -111,7 +111,7 @@ function processSignupCallback(req, username, password, done) {
             'username' :  username
 				}
     })
-    .then((user)=> {
+    .then((user) => {
         if (user) {
             // user exists call done() passing null and false
             return done(null, false);
@@ -124,7 +124,6 @@ function processSignupCallback(req, username, password, done) {
 			   console.log("User has been created.")
 			    return done(null, user);
 			})
-
 		}	 
 	})
 }
@@ -156,7 +155,6 @@ function processLoginCallback(req, username, password, done) {
 			    return done(null, user);
 			  }
 		})
-
 };
 
 // * Passport Middleware *
@@ -332,7 +330,6 @@ app.post('/schedule', (req, res) => {
   })
 });
 
-
 // Set Cron Jobs to send SMS messages at specific time(s)
 const cron = require('cron-scheduler');
 const cronJob = require('cron').CronJob;
@@ -422,7 +419,7 @@ var lateNightJob = new cronJob( '00 00 21 * * *', function(){
 	.then((row) => {
 		User.findOne({ 
 			where: { 
-			id: row.dataValues.userId 
+				id: row.dataValues.userId 
 		}
 	})
 	.then((row) => {
