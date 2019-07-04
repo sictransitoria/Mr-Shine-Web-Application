@@ -330,7 +330,7 @@ app.post('/schedule', (req, res) => {
   })
 });
 
-// Set Cron Jobs to send SMS messages at specific time(s)
+// Set cron Jjbs to send SMS messages at specific time(s)
 const cron = require('cron-scheduler');
 const cronJob = require('cron').CronJob;
 

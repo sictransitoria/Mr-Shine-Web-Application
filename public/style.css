@@ -8,7 +8,7 @@ body {
   font-family: AmericanTypewriter-Bold, sans-serif;
   display: flex;
   justify-content: center;
-  /*margin-top: 10px;*/
+  margin-top: 35px;
 
 }
 
@@ -17,9 +17,8 @@ body {
   background-color: #6FB3FF;
   padding-bottom: 20px;
   margin: 0 auto;
-  display: flex;
   flex-direction: column;
-  position: fixed;
+  position: relative;
 
 }
 
@@ -36,7 +35,6 @@ body {
 
 .header {
   color: #ffffff;
-  font-size
 
 }
 
@@ -66,13 +64,12 @@ body {
 
 .mrShineHeader {
   color: #ffffff;
-  position: relative;
   text-align: center;
   font-size: 112px;
 
 }
 
-.mrShineWelcome{
+.mrShineWelcome {
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -136,6 +133,7 @@ body {
   background: -ms-linear-gradient(top,  #63B8EE,  #468CCF);
 
 }
+
 #white-button a:hover {
   background-color: #6FB3FF;
 
@@ -203,7 +201,6 @@ footer {
     height: 14px;
     background-color: rgba(0,0,0,0.38);
     border-radius: 15px;
-    margin-right: 10px;
     -webkit-transition: background 0.3s ease;
     transition: background 0.1s ease;
     vertical-align: middle;
