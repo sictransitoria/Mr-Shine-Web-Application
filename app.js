@@ -1,442 +1,299 @@
-// | + ~((\☼.☼/))~ + |
-
 const express = require('express');
 const ejs = require('ejs');
-const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
-const notifications = require('./notifications.js')
-
-// Sequelize Variables
-const Sequelize = require('sequelize');
+const notifications = require('./notifications.js');
+const { Sequelize, Op } = require('sequelize');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const cron = require('cron');
 
-// Create a new Express Application
+require('dotenv').config();
+
 const app = express();
-
-// Loud and Clear
 const PORT = process.env.PORT || 3000;
 
-// Protect Yoself
-const dotenv = require('dotenv');
-require('dotenv').config();
-dotenv.load();
+const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID;
+const TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN;
+const TWILIO_NUMBER = process.env.TWILIO_NUMBER;
 
-const TWILIO_ACCOUNT_SID = process.env.TWILIO_ACCOUNT_SID,
-      TWILIO_AUTH_TOKEN = process.env.TWILIO_AUTH_TOKEN,
-      TWILIO_NUMBER = process.env.TWILIO_NUMBER;
-      DATABASE_URL = process.env.DATABASE_URL;
-
-// Configure View Engine to Render EJS.
 app.set('view engine', 'ejs');
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(express.static('public'));
 
-// CREATE DATABASE
-const Op = Sequelize.Op
+// Database Setup
 const sequelize = new Sequelize(process.env.DB_DATAB, process.env.DB_USER, process.env.DB_PASS, {
-	host: 'localhost',
-	port: '5432',
-	dialect: 'postgres',
-	operatorsAliases: {
-		$and: Op.and,
-		$or: Op.or,
-		$eq: Op.eq,
-		$like: Op.like,
-		$iLike: Op.iLike
-	}
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    dialect: 'postgres',
 });
 
-// CREATE TABLE(s)
-const User = sequelize.define('user', {
-	username: Sequelize.STRING,
-	password: Sequelize.STRING,
-	phonenumber: Sequelize.STRING,
-	email: Sequelize.STRING
+console.log('DB_HOST:', process.env.DB_HOST);
+console.log('DB_DATAB:', process.env.DB_DATAB);
+console.log('DB_USER:', process.env.DB_USER);
+console.log('DB_PASS:', process.env.DB_PASS);
+console.log('DB_PORT:', process.env.DB_PORT);
 
+sequelize.authenticate()
+    .then(() => {
+        console.log('Connection has been established successfully.');
+    })
+    .catch(err => {
+        console.error('Unable to connect to the database:', err);
+    });
+
+// Models
+const User = sequelize.define('user', {
+    username: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+    },
+    password: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    phonenumber: Sequelize.STRING,
+    email: {
+        type: Sequelize.STRING,
+        validate: {
+            isEmail: true
+        }
+    }
 });
 
 const Schedule = sequelize.define('schedule', {
-	morning: Sequelize.BOOLEAN,
-	afternoon: Sequelize.BOOLEAN,
-	evening: Sequelize.BOOLEAN,
-	latenight: Sequelize.BOOLEAN
-
+    morning: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    afternoon: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    evening: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+    },
+    latenight: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+    }
 });
 
-Schedule.belongsTo(User);  // Will add an ID attribute to User to hold the primary key value for Schedule
+Schedule.belongsTo(User);
 
-const sessionStore = new SequelizeStore({
-    db: sequelize
+// Session Setup
+const sessionStore = new SequelizeStore({ db: sequelize });
+app.use(session({
+    secret: process.env.SESSION_SECRET || 'your-secret-key',
+    store: sessionStore,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: process.env.NODE_ENV === 'production',
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
 
+// Passport Configuration
+app.use(passport.initialize());
+app.use(passport.session());
+
+passport.serializeUser((user, done) => {
+    done(null, user.id);
 });
 
-sequelize.sync();
-sessionStore.sync();
-
-// Passport Variables
-const LocalStrategy = require('passport-local').Strategy;
-const Strategy = require('passport-local').Strategy;
-const passport = require('passport');
-
-// -- Sessions -- 
-passport.serializeUser(function (user, done) {
-		console.log("***** Serialize User *****")
-      done(null, user)
+passport.deserializeUser(async (id, done) => {
+    try {
+        const user = await User.findByPk(id);
+        done(null, user);
+    } 
+    catch (err) {
+        done(err);
+    }
 });
 
-// Convert ID in Cookie to User Details
-	passport.deserializeUser(function (obj,done) {
-		console.log("-- deserializeUser --");
-		console.log(obj)	
-			done(null, obj);
-});
-
-// * Start Passport Sign-Up *
-
-// Passport Sign-up
 passport.use('local-signup', new LocalStrategy({
     usernameField: 'username',
     passwordField: 'password',
-    phonenumberField: 'cell',
-    emailField: 'email',
     passReqToCallback: true
-}, processSignupCallback));
+}, async (req, username, password, done) => {
+    try {
+        const existingUser = await User.findOne({ where: { username } });
+        if (existingUser) {
+            return done(null, false, { message: 'Username already exists' });
+        }
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const newUser = await User.create({
+            username,
+            password: hashedPassword,
+            phonenumber: req.body.cell,
+            email: req.body.email
+        });
+        return done(null, newUser);
+    } 
+    catch (error) {
+        return done(error);
+    }
+}));
 
-function processSignupCallback(req, username, password, done) {
-    // Search to See if the User Exists in the Database
-    User.findOne({
-        where: {
-            'username' :  username
-				}
-    })
-    .then((user) => {
-        if (user) {
-            // user exists call done() passing null and false
-            return done(null, false);
-        } else {
-
-// Create a New User
-			let newUser = req.body;
-			User.create(newUser)
-			.then((user) => {
-			   console.log("User has been created.")
-			    return done(null, user);
-			})
-		}	 
-	})
-}
-
-// * End of Passport Sign-up *
-
-// * Start of Passport Login *
-
-// Local Strategy
 passport.use('local-login', new LocalStrategy({
     usernameField: 'username',
     passwordField: 'password',
-    passReqToCallback: true
-}, processLoginCallback));
-
-function processLoginCallback(req, username, password, done) {
-    User.findOne({
-        where: {
-            'username' :  username
-				},
-    })
-    .then((user) => {
+}, async (username, password, done) => {
+    try {
+        const user = await User.findOne({ where: { username } });
         if (!user) {
-            return done(null, false);
-        } else if (password !== user.password){
-						return done(null, false)
-					} else {
-			   console.log("You've logged in.");
-			    return done(null, user);
-			  }
-		})
-};
+            return done(null, false, { message: 'Incorrect username.' });
+        }
+        const isValidPassword = await bcrypt.compare(password, user.password);
+        if (!isValidPassword) {
+            return done(null, false, { message: 'Incorrect password.' });
+        }
+        return done(null, user);
+    } catch (error) {
+        return done(error);
+    }
+}));
 
-// * Passport Middleware *
+// Twilio Setup
+const client = require('twilio')(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN);
 
-// Must be Initialized in Order for Passport to Work
-  app.use(passport.initialize());
-  app.use(passport.session());
-
-// Configure the Local Strategy for use by Passport
-passport.use(new Strategy(
-  function(username, password, cb) {
-    db.users.findByUsername(username, (err, user) => {
-      if (err) { return cb(err); }
-      if (!user) { return cb(null, false); }
-      if (user.password != password) { return cb(null, false); }
-      return cb(null, user);
-    });
-  }));
-
-// Configure Passport Authenticated Session Persistence
-passport.serializeUser( (user, cb) => {
-  cb(null, user.id);
-});
-
-passport.deserializeUser((id, cb) => {
-  db.users.findById(id, (err, user) => {
-    if (err) { return cb(err); }
-    cb(null, user);
-  });
-}); 
-
-// * ROUTES *
-
-// GET Routes
-
-// GET '/'
-app.get('/', (req, res) => {
-	return res.render('welcome');
-});
-
-// GET Sign-Up 
-app.get('/signup', (req, res) => {
-	return res.render('signup');
-});
-
-// GET Login
-app.get('/login', (req, res) => {
-    return res.render('login');
-});
-
-// GET Mr. Shine
-app.get('/mr-shine', (req, res) => {
-  	User.findOne({
-		where: {
-			username: username
-		}
-	})
-	.then((row) => {
-		Schedule.findOne({
-			where: {
-				userId: row.dataValues.id
-		}
-	})
-	.then((row) => {
-		if(row == null) {
-		scheduleUpdate = false
-		
-		} else {
-		scheduleUpdate = true
-
-		}
-		return res.render('mr-shine', { row, user: username, schedule: scheduleUpdate });
-    })
-  })
-});
-
-// GET Logout
+// Routes
+app.get('/', (req, res) => res.render('welcome'));
+app.get('/signup', (req, res) => res.render('signup'));
+app.get('/login', (req, res) => res.render('login'));
 app.get('/logout', (req, res) => {
-	return res.render('logout', { user: req.user });
+    req.logout();
+    res.redirect('/');
 });
 
-// POST Routes
+app.get('/mr-shine', async (req, res) => {
+    if (!req.user) {
+        return res.redirect('/login');
+    }
+    try {
+        const schedule = await Schedule.findOne({ where: { userId: req.user.id } });
+        res.render('mr-shine', {
+            user: req.user,
+            schedule: schedule ? true : false
+        });
+    } 
+    catch (error) {
+        console.error(error);
+        res.status(500).send('Server Error');
+    }
+});
 
-// POST Sign-Up
 app.post('/signup', (req, res, next) => {
-	passport.authenticate('local-signup', (err, user) => {
-		if (err) {
-			return next(err);
-		} else {
-			return res.redirect('/login')
-		}
-	})(req, res, next);
+    passport.authenticate('local-signup', (err, user, info) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.render('signup', { message: info.message });
+        }
+        req.login(user, (err) => {
+            if (err) {
+                return next(err);
+            }
+            return res.redirect('/mr-shine');
+        });
+    })(req, res, next);
 });
 
-let demandPhone;
-let username;
-
-// POST Login
 app.post('/login', (req, res, next) => {
-		passport.authenticate('local-login', (err, user) => {
-			if (err || user == false) {
-				return res.render('login', {message: "Incorrect Username/Password"})
-			} else {
-				req.login(user, function(err){
-					console.log("Getting req.user :"+ req.user)
-					return res.render('mr-shine', {user: req.user})
-				})
-			}
-		}) (req, res, next);
-
-	username = req.body.username;
-	console.log(username);
-
-	User.findOne({
-		where: {
-		  username: username
-	}
-  })
-	.then((row) => {
-		demandPhone = row.dataValues.phonenumber;
-		console.log(demandPhone);
-  })
+    passport.authenticate('local-login', (err, user, info) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.render('login', { message: info.message });
+        }
+        req.login(user, (err) => {
+            if (err) {
+                return next(err);
+            }
+            return res.redirect('/mr-shine');
+        });
+    })(req, res, next);
 });
 
-// SMS .. | + ~((\☼.☼/))~ + | ..
-
-// **** Twilio Credentials ****
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const client = require('twilio')(accountSid, authToken);
-
-// Randomize SMS
-var currentIndex = notifications.notifications.length;
-var randomIndex = Math.floor(Math.random() * currentIndex);
-var sendSMS = notifications.notifications[randomIndex];
-
-// POST to Send On-Demand Messages With One Click
-app.post('/on-demand', (req, res) => {
-console.log('*****' + randomIndex + '*****');
-console.log(notifications.notifications[randomIndex]);
-
-  		client.messages.create( { 
-			to: demandPhone, 
-  			from: TWILIO_NUMBER, 
-  			body: sendSMS }, function( err, data ) {});
-  		return res.render('mr-shine')
+app.post('/on-demand', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).send('Unauthorized');
+    }
+    try {
+        const randomIndex = Math.floor(Math.random() * notifications.notifications.length);
+        const sendSMS = notifications.notifications[randomIndex];
+        await client.messages.create({
+            to: req.user.phonenumber,
+            from: TWILIO_NUMBER,
+            body: sendSMS
+        });
+        res.render('mr-shine', { message: 'Message sent successfully' });
+    } 
+    catch (error) {
+        console.error(error);
+        res.status(500).send('Failed to send message');
+    }
 });
 
-app.post('/schedule', (req, res) => {
-	console.log('***** Morning ****', req.body.morning);
-	console.log('***** Afternoon ****', req.body.afternoon);
-	console.log('***** Evening ****', req.body.evening);
-	console.log('***** Late Night ****', req.body.latenight);
-	console.log('****** Username ****', username);
-
-	User.findOne({
-		where: {
-			username: username
-		}
-	})
-	.then((row) => {
-		console.log('**** User ID ****', row.dataValues.id)
-		let userId = row.dataValues.id;
-	
-	Schedule.create({
-		morning: req.body.morning,
-		afternoon: req.body.afternoon,
-		evening: req.body.evening,
-		latenight: req.body.latenight,
-		userId: userId
-
-	})
-  })
+app.post('/schedule', async (req, res) => {
+    if (!req.user) {
+        return res.status(401).send('Unauthorized');
+    }
+    try {
+        await Schedule.upsert({
+            morning: req.body.morning === 'on',
+            afternoon: req.body.afternoon === 'on',
+            evening: req.body.evening === 'on',
+            latenight: req.body.latenight === 'on',
+            userId: req.user.id
+        });
+        res.redirect('/mr-shine');
+    } 
+    catch (error) {
+        console.error(error);
+        res.status(500).send('Failed to update schedule');
+    }
 });
 
-// Set cron Jjbs to send SMS messages at specific time(s)
-const cron = require('cron-scheduler');
-const cronJob = require('cron').CronJob;
+// Cron Jobs
+function setupCronJob(time, scheduleField) {
+    new cron.CronJob(time, async function () {
+        try {
+            const schedules = await Schedule.findAll({ where: { [scheduleField]: true }, include: [User] });
+            for (let schedule of schedules) {
+                const randomIndex = Math.floor(Math.random() * notifications.notifications.length);
+                const sendSMS = notifications.notifications[randomIndex];
+                await client.messages.create({
+                    to: schedule.User.phonenumber,
+                    from: TWILIO_NUMBER,
+                    body: sendSMS
+                });
+                console.log(`Sent a ${scheduleField} text to ${schedule.User.username}`);
+            }
+        } 
+        catch (error) {
+            console.error(`Error in ${scheduleField} cron job:`, error);
+        }
+    }, null, true, 'America/New_York');
+}
 
-// MORNING 00 9
-var morningJob = new cronJob( '00 00 9 * * *', function(){
-	Schedule.findOne({
-		where: {
-			morning: 't'
-		}
-	})
-	.then((row) => {
-		User.findOne({ 
-			where: { 
-			id: row.dataValues.userId 
-		}
-	})
-	.then((row) => {
-		let scheduleNumber = row.dataValues.phonenumber;
-  		  client.messages.create( { 
-  		    to: scheduleNumber, 
-  		    from: TWILIO_NUMBER, 
-  		    body: sendSMS }, function( err, data ) {});
-  		    console.log('*** SENT A MORNING TEXT ***');
-  	  })
-  	})
+setupCronJob('0 9 * * *', 'morning');
+setupCronJob('30 12 * * *', 'afternoon');
+setupCronJob('0 17 * * *', 'evening');
+setupCronJob('0 21 * * *', 'latenight');
+
+// Database Sync and Server Start
+sequelize.sync().then(() => {
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}).catch(err => {
+    console.error('Unable to connect to the database:', err);
 });
-	morningJob.start();
-
-// AFTERNOON 30 12
-var afternoonJob = new cronJob( '00 30 12 * * *', function(){
-	Schedule.findOne({
-		where: {
-			afternoon: 't'
-		}
-	})
-	.then((row) => {
-		User.findOne({ 
-			where: { 
-			id: row.dataValues.userId 
-		}
-	})
-	.then((row) => {
-		let scheduleNumber = row.dataValues.phonenumber;
-  		  client.messages.create( { 
-  		    to: scheduleNumber, 
-  		    from: TWILIO_NUMBER, 
-  		    body: sendSMS }, function( err, data ) {});
-  		    console.log('*** SENT AN AFTERNOON TEXT ***');
-  	  })
-  	})
-});
-	afternoonJob.start();
-
-// EVENING 00 00 17
-var eveningJob = new cronJob( '00 00 17 * * *', function(){
-	Schedule.findOne({
-		where: {
-			evening: 't'
-		}
-	})
-	.then((row) => {
-		User.findOne({ 
-			where: { 
-			id: row.dataValues.userId 
-		}
-	})
-	.then((row) => {
-		let scheduleNumber = row.dataValues.phonenumber;
-  		  client.messages.create( { 
-  		    to: scheduleNumber, 
-  		    from: TWILIO_NUMBER, 
-  		    body: sendSMS }, function( err, data ) {});
-  		    console.log('*** SENT AN EVENING TEXT ***');
-  	  })
-  	})
-});
-	eveningJob.start();
-
-// LATE NIGHT 00 00 21
-var lateNightJob = new cronJob( '00 00 21 * * *', function(){
-	Schedule.findOne({
-		where: {
-			latenight: 't'
-		}
-	})
-	.then((row) => {
-		User.findOne({ 
-			where: { 
-				id: row.dataValues.userId 
-		}
-	})
-	.then((row) => {
-		let scheduleNumber = row.dataValues.phonenumber;
-  		  client.messages.create( { 
-  		    to: scheduleNumber, 
-  		    from: TWILIO_NUMBER, 
-  		    body: sendSMS }, function( err, data ) {});
-  		    console.log('*** SENT A LATE-NIGHT TEXT ***');
-  	  })
-  	})
-});
-	lateNightJob.start();
-
-// Loud and Clear
-app.listen(PORT, ()=>{
-	console.log('..| + ~((\☼.☼/))~ + |..')
-});
-
-

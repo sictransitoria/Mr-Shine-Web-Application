@@ -3,7 +3,7 @@
 // Front-End Scripts
 
 // Modal Script
- $(document).ready(function(){
+$(document).ready(function () {
     $('.modal').modal();
 });
 
@@ -12,5 +12,5 @@ function scheduleAlert() {
 };
 
 function onDemandAlert() {
-	alert("Shine on, homie.")
+    alert("Shine on, homie.")
 };

@@ -1,49 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-  <meta name="Mr. Shine Web Application" content="by Michael J Oria"/>
-  <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1">
-  <!-- <link rel="icon" href="favicon.ico" type="image/x-icon" /> -->
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
-  <link rel="stylesheet" type="text/css" href="./style.css">
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-  <script src="script.js" type="text/javascript"></script>
-  <title>Login!</title>
+    <meta name="description" content="Mr. Shine Web Application by x J x">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script src="script.js" type="text/javascript"></script>
+    <title>Login!</title>
 </head>
+
 <body>
-
-  <!-- | + ~((\☼.☼/))~ + | -->
-
-  <div class="container">
-    <!-- Vector Sun -->
-    <img src="./images/sun.png" width=300px height=300px title="sun_log" alt="Friendly Sun">
-      <div id="container-login">
-          <h1 class="header">Login</h1>
-        <form method="POST" action="/login">
-            <div class="form-group">
-                <label for="username">Username:   </label>
-                  <input type="text" name="username" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter Username">
-            </div>
-            <div class="form-group">
-                <label for="username">Password:   </label>
-                  <input type="password" name="password" class="form-control" id="username" aria-describedby="usernameHelp" placeholder="Enter Username">
-            </div>
-            <div class='btn-align-align'>
-                <button id="button" class="waves-effect waves-light btn-large">LOGIN</button>
-            </div>
-          </div>
-        </form>
-          <div id="register-id">
+    <div class="container">
+        <!-- Vector Sun -->
+        <img src="./images/sun.png" width="300" height="300" title="sun_logo" alt="Friendly Sun">
+        <div id="container-login">
+            <h1 class="header">Login</h1>
+            <form method="POST" action="/login">
+                <div class="form-group">
+                    <label for="username">Username: </label>
+                    <input type="text" name="username" class="form-control" id="username"
+                        aria-describedby="usernameHelp" placeholder="Enter Username">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password: </label>
+                    <input type="password" name="password" class="form-control" id="password"
+                        aria-describedby="passwordHelp" placeholder="Enter Password">
+                </div>
+                <div class='btn-align-align'>
+                    <button id="button" class="waves-effect waves-light btn-large">LOGIN</button>
+                </div>
+            </form>
+        </div>
+        <div id="register-id">
             <p>By logging in, you're agreeing to our Terms, Data Policy and Cookies Policy.</p>
-          </div>
+        </div>
         <footer>
-            <% include ./partials/footer %>
+            <%- include('./partials/footer') %>
         </footer>
-      </div>
     </div>
-
 </body>
+
 </html>
